@@ -15,10 +15,10 @@ EOSQL
 for DB in template_postgis "$POSTGRES_DB"; do
 	echo "Loading PostGIS extensions into $DB"
 	"${psql[@]}" --dbname="$DB" <<-'EOSQL'
-		CREATE EXTENSION IF NOT EXISTS postgis;
-		CREATE EXTENSION IF NOT EXISTS postgis_topology;
-		CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;
-		CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder;
-		CREATE EXTENSION IF NOT EXISTS pg_repack;
+		CREATE EXTENSION IF NOT EXISTS postgis CASCADE;
+		CREATE EXTENSION IF NOT EXISTS postgis_topology CASCADE;
+		CREATE EXTENSION IF NOT EXISTS fuzzystrmatch CASCADE;
+		CREATE EXTENSION IF NOT EXISTS postgis_tiger_geocoder CASCADE;
+		CREATE EXTENSION IF NOT EXISTS pg_repack CASCADE;
 EOSQL
 done
