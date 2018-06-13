@@ -38,19 +38,6 @@ for version in "${versions[@]}"; do
 
 	srcVersion="${fullVersion%%+*}"
 	srcSha256="$(curl -sSL "https://github.com/postgis/postgis/archive/$srcVersion.tar.gz" | sha256sum | awk '{ print $1 }')"
-	for variant in alpine; do
-		if [ ! -d "$version/$variant" ]; then
-			continue
-		fi
-		(
-			set -x
-			cp Dockerfile.alpine.template initdb-postgis.sh update-postgis.sh "$version/$variant/"
-			mv "$version/$variant/Dockerfile.alpine.template" "$version/$variant/Dockerfile"
-			sed -i 's/%%PG_MAJOR%%/'"$pg_major"'/g; s/%%POSTGIS_VERSION%%/'"$srcVersion"'/g; s/%%POSTGIS_SHA256%%/'"$srcSha256"'/g' "$version/$variant/Dockerfile"
-		)
-		travisEnv="\n  - VERSION=$version VARIANT=$variant$travisEnv"
-	done
-
 	travisEnv='\n  - VERSION='"$version$travisEnv"
 done
 travis="$(awk -v 'RS=\n\n' '$1 == "env:" { $0 = "env:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
